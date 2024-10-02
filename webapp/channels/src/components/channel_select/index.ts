@@ -1,6 +1,3 @@
-// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
-// See LICENSE.txt for license information.
-
 import {connect} from 'react-redux';
 
 import type {GlobalState} from '@mattermost/types/store';
@@ -17,7 +14,8 @@ const getMyChannelsSorted = createSelector(
     getMyChannels,
     getCurrentUserLocale,
     (channels, locale) => {
-        return [...channels].sort(sortChannelsByTypeAndDisplayName.bind(null, locale));
+        const activeChannels = channels.filter((channel) => channel.delete_at === 0);
+        return [...activeChannels].sort(sortChannelsByTypeAndDisplayName.bind(null, locale));
     },
 );
 

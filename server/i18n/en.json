@@ -100,6 +100,10 @@
     "translation": "An error occurred while deleting the certificate."
   },
   {
+    "id": "api.admin.saml.get_metadata.app_error",
+    "translation": "Failed to download the SAML metadata. Please contact support if the issue persists."
+  },
+  {
     "id": "api.admin.saml.failure_get_metadata_from_idp.app_error",
     "translation": "Failed to obtain metadata from Identity Provider URL."
   },

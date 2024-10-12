@@ -22,6 +22,8 @@ import type {InviteResult} from 'components/invitation_modal/result_table';
 import type {InviteResults} from 'components/invitation_modal/result_view';
 
 import {ConsolePages} from 'utils/constants';
+import Root from 'components/root/root';
+import { RootStateOrAny } from 'react-redux';
 
 export function sendMembersInvites(teamId: string, users: UserProfile[], emails: string[]): ActionFuncAsync<InviteResults> {
     return async (dispatch, getState) => {
@@ -156,8 +158,13 @@ export async function sendGuestInviteForUser(
     teamId: string,
     channels: Channel[],
     members: RelationOneToOne<Channel, Record<string, ChannelMembership>>,
+    getState: () => RootStateOrAny,
 ): Promise<({sent: InviteResult} | {notSent: InviteResult})> {
+    const state = getState();
+    const currentUserIsAdmin = isCurrentUserSystemAdmin(state);
+
     if (!isGuest(user.roles)) {
+        if (currentUserIsAdmin) {  
         return {
             notSent: {
                 user,
@@ -167,6 +174,17 @@ export async function sendGuestInviteForUser(
                 }),
             },
         };
+    } else {
+        return {
+            notSent: {
+                user,
+                reason: defineMessage({
+                    id: 'invite.members.user-is-not-guest',
+                    defaultMessage: 'This person is already a member of the workspace and cannot be invited as a guest. Please contact your system administrator to invite them as a member.',
+                }),
+            },
+        };
+    }
     }
     let memberOfAll = true;
     let memberOfAny = false;

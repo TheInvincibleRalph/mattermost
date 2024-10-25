@@ -51,6 +51,14 @@ func getInfoForBytes(name string, data io.ReadSeeker, size int) (*model.FileInfo
 			} else {
 				info.HasPreviewImage = true
 			}
+		} else {
+			return nil, model.NewAppError(
+				"getInfoForBytes",
+				"app.file_info.decode_image.app_error",
+				nil,
+				err.Error(),
+				http.StatusUnsupportedMediaType,
+			).Wrap(err)
 		}
 	}
 
